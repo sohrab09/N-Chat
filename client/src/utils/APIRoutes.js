@@ -1,0 +1,11 @@
+export const host = "http://localhost:5001"; //local host
+// export const host = "http://172.16.10.125:809"; //server host
+export const loginRoute = `${host}/api/auth/login`;
+export const registerRoute = `${host}/api/auth/register`;
+export const logoutRoute = `${host}/api/auth/logout`;
+export const allUsersRoute = `${host}/api/auth/allusers`;
+export const sendMessageRoute = `${host}/api/messages/addmsg`;
+export const recieveMessageRoute = `${host}/api/messages/getmsg`;
+export const receiveNotificationRoute = `${host}/api/messages/notification`; // Today Update - Add notification to the user
+export const updateNotificationRoute = `${host}/api/messages/notification`; // Today Update - Update notification to the user
+export const setAvatarRoute = `${host}/api/auth/setavatar`;
