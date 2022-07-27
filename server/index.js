@@ -55,9 +55,9 @@ io.on("connection", (socket) => {
 
   socket.on("send-msg", async (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
-    console.log("sendUserSocket", sendUserSocket); // when both user are online then it will show socket id //today added
+    console.log("sendUserSocket", sendUserSocket); // when both user are online then it will show socket id //!today added
     if (sendUserSocket) {
-      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+      socket.to(sendUserSocket).emit("receive-msg", data.msg);
     }
   });
 });

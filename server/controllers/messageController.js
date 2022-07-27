@@ -43,12 +43,12 @@ module.exports.addMessage = async (req, res, next) => {
 
 module.exports.getNotifications = async (req, res, next) => {
   const { userId } = req.params;
-  console.log("userId", userId);
+  // console.log("userId", userId);
   const notifications = await Messages.find({
     to: userId,
     isSeen: false,
   });
-  console.log("notifications", notifications);
+  // console.log("notifications", notifications);
   return res.send({
     success: true,
     message: "Notifications fetched successfully",

@@ -67,7 +67,7 @@ export default function ChatContainer({ currentChat, socket }) {
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-recieve", async (msg) => {
+      socket.current.on("receive-msg", async (msg) => {
         const url = `${receiveNotificationRoute}/${msg.from}`; // get the user who sent the message //today added
         console.log(`url---------------`, url); //today added
         const response = await axios.get(url); //today added

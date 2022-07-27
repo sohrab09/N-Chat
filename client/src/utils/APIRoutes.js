@@ -7,5 +7,5 @@ export const allUsersRoute = `${host}/api/auth/allusers`;
 export const sendMessageRoute = `${host}/api/messages/addmsg`;
 export const recieveMessageRoute = `${host}/api/messages/getmsg`;
 export const receiveNotificationRoute = `${host}/api/messages/notification`; // Today Update - Add notification to the user
-export const updateNotificationRoute = `${host}/api/messages/notification`; // Today Update - Update notification to the user
+export const updateNotificationRoute = `${host}/api/messages/updateNotification`; // Today Update - Update notification to the user
 export const setAvatarRoute = `${host}/api/auth/setavatar`;
