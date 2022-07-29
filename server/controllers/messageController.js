@@ -29,6 +29,7 @@ module.exports.addMessage = async (req, res, next) => {
       message: { text: message },
       users: [from, to],
       sender: from,
+      isSeen: false,
     });
 
     if (data) return res.json({ msg: "Message added successfully." });
@@ -45,19 +46,20 @@ module.exports.getNotifications = async (req, res, next) => {
   const { userId } = req.params;
   // console.log("userId", userId);
   const notifications = await Messages.find({
-    to: userId,
+    'users.1': userId,
     isSeen: false,
   });
   // console.log("notifications", notifications);
   return res.send({
     success: true,
     message: "Notifications fetched successfully",
-    data: notifications.length,
+    data: notifications,
   })
 }
 
 module.exports.updateNotification = async (req, res, next) => {
   const { notificationId } = req.params;
+  console.log(notificationId, req.body)
   const payload = req.body;
 
   const notification = await Messages.find({ _id: notificationId });

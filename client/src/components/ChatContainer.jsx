@@ -4,7 +4,7 @@ import ChatInput from "./ChatInput";
 // import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import { sendMessageRoute, recieveMessageRoute, receiveNotificationRoute } from "../utils/APIRoutes";
+import { sendMessageRoute, recieveMessageRoute, updateNotificationRoute } from "../utils/APIRoutes";
 
 export default function ChatContainer({ currentChat, socket }) {
 
@@ -45,7 +45,7 @@ export default function ChatContainer({ currentChat, socket }) {
       socket.current.emit("send-msg", {
         to: currentChat._id,
         from: data._id,
-        msg,
+        message: msg,
       });
     }
     catch (err) {
@@ -54,11 +54,13 @@ export default function ChatContainer({ currentChat, socket }) {
 
     }
 
-    await axios.post(sendMessageRoute, {
-      from: data._id,
-      to: currentChat._id,
-      message: msg,
-    });
+    // await axios.post(sendMessageRoute, {
+    //   from: data._id,
+    //   to: currentChat._id,
+    //   message: msg,
+    // });
+
+
 
     const msgs = [...messages];
     msgs.push({ fromSelf: true, message: msg });
@@ -67,13 +69,16 @@ export default function ChatContainer({ currentChat, socket }) {
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("receive-msg", async (msg) => {
-        const url = `${receiveNotificationRoute}/${msg.from}`; // get the user who sent the message //today added
-        console.log(`url---------------`, url); //today added
-        const response = await axios.get(url); //today added
-        console.log(`response---------------`, response); //today added
-        setArrivalMessage(response.message); //today added
-        setArrivalMessage({ fromSelf: false, message: msg });
+      socket.current.on("receive-msg", async (notification) => {
+        console.log("notification", notification)
+        setArrivalMessage({ fromSelf: false, message: notification.message.text });
+        const url = `${updateNotificationRoute}/${notification._id}`;
+        console.log("Update notification url", url);
+        const response = await axios.put(url, {
+          isSeen: true,
+          seenAt: new Date(),
+        });
+        console.log("Update notification response", response);
       });
     }
   }, []);
@@ -85,6 +90,7 @@ export default function ChatContainer({ currentChat, socket }) {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
 
   return (
     <Container>

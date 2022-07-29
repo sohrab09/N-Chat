@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
+const Messages  = require('./models/messageModel')
 const app = express();
 const socket = require("socket.io");
 require("dotenv").config();
@@ -55,9 +56,18 @@ io.on("connection", (socket) => {
 
   socket.on("send-msg", async (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
+
+    const { from, to, message } = data;
+    const notification = await Messages.create({
+      message: { text: message },
+      users: [from, to],
+      sender: from,
+      isSeen: false,
+    });
+
     console.log("sendUserSocket", sendUserSocket); // when both user are online then it will show socket id //!today added
     if (sendUserSocket) {
-      socket.to(sendUserSocket).emit("receive-msg", data.msg);
+      socket.to(sendUserSocket).emit("receive-msg", notification);
     }
   });
 });

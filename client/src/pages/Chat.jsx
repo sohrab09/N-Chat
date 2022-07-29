@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { allUsersRoute, host } from "../utils/APIRoutes";
+import { allUsersRoute,receiveNotificationRoute, host } from "../utils/APIRoutes";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
@@ -13,10 +13,12 @@ export default function Chat() {
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
+  const [notification, setNotification] = useState(false);
 
   
   const [currentUser, setCurrentUser] = useState(undefined);
   // console.log("currentChat", currentUser);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
@@ -35,10 +37,16 @@ export default function Chat() {
     }
   }, [currentUser]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (currentUser) {
       if (currentUser.isAvatarImageSet) {
         const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+        const url = `${receiveNotificationRoute}/${currentUser._id}`; // get the user who sent the message //today added
+        console.log(`url---------------`, url); //today added
+        const response = await axios.get(url); //today added
+        console.log(`notification response---------------`, response.data.data); //today added
+        setNotification(response.data.data);
         setContacts(data.data);
       } else {
         navigate("/setAvatar");
@@ -52,7 +60,7 @@ export default function Chat() {
     <>
       <Container>
         <div className="container">
-          <Contacts contacts={contacts} changeChat={handleChatChange} />
+          <Contacts contacts={contacts} changeChat={handleChatChange} notification={notification}/>
           {currentChat === undefined ? (
             <Welcome />
           ) : (
