@@ -43,9 +43,9 @@ export default function Chat() {
       if (currentUser.isAvatarImageSet) {
         const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
         const url = `${receiveNotificationRoute}/${currentUser._id}`; // get the user who sent the message //today added
-        console.log(`url---------------`, url); //today added
+        // console.log(`url---------------`, url); //today added
         const response = await axios.get(url); //today added
-        console.log(`notification response---------------`, response.data.data); //today added
+        // console.log(`notification response---------------`, response.data.data); //today added
         setNotification(response.data.data);
         setContacts(data.data);
       } else {

@@ -22,7 +22,7 @@ export default function ChatContainer({ currentChat, socket }) {
       from: data._id,
       to: currentChat._id,
     });
-    console.log(`response---------------`, response); //today added
+    // console.log(`response---------------`, response); //today added
     setMessages(response.data);
   }, [currentChat]);
 

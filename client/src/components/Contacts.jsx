@@ -2,9 +2,28 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logout from "./Logout";
 import Notification from "./Notification";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
+const style = {
+  position: 'absolute',
+  top: '20%',
+  left: '16%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function Contacts({ contacts, changeChat, notification }) {
+  // console.log("contacts", contacts)
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   // console.log("notification", notification);
 
@@ -20,6 +39,7 @@ export default function Contacts({ contacts, changeChat, notification }) {
     setCurrentUserImage(data.employeeId);
   }, []);
   const changeCurrentChat = (index, contact) => {
+    // console.log("contact", contact)
     setCurrentSelected(index);
     changeChat(contact);
   };
@@ -32,9 +52,38 @@ export default function Contacts({ contacts, changeChat, notification }) {
             <h1 style={{ color: 'black' }}><span style={{ fontSize: '50px', color: 'black' }}>N</span>chat</h1>
             {/* Today Update  */}
             <div style={{ fontSize: '1.20rem' }}>
-              <Notification width={"30px"} color={"#122C34"} count={notification.length} />
+              <Button onClick={handleOpen}>
+                <Notification width={"30px"} color={"#122C34"} count={notification.length} />
+              </Button>
               <div>
-                {!notification.length && "No New Messages"}
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                      {!notification.length && "No New Messages"}
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                      {notification.length && notification.map((item, index) => {
+                        console.log("item", item);
+                        return (
+                          <Typography variant="body2" component="p"
+                            onClick={() => {
+                              changeChat(index, item.contact);
+                              handleClose();
+                            }}
+                          >
+                            New Message From: {item.users[0]}
+                          </Typography>
+                        );
+                      }
+                      )}
+                    </Typography>
+                  </Box>
+                </Modal>
               </div>
             </div>
             {/* Today Update  */}
