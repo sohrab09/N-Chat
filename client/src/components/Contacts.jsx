@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logout from "./Logout";
-import { AiFillBell } from "react-icons/ai";
 import Notification from "./Notification";
 
 
 export default function Contacts({ contacts, changeChat, notification }) {
 
-  console.log("notification", notification);
+  // console.log("notification", notification);
 
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     const data = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
@@ -30,23 +30,14 @@ export default function Contacts({ contacts, changeChat, notification }) {
         <Container>
           <div className="brand" style={{ marginBottom: '30px', display: 'flex', justifyContent: 'space-between' }}>
             <h1 style={{ color: 'black' }}><span style={{ fontSize: '50px', color: 'black' }}>N</span>chat</h1>
+            {/* Today Update  */}
             <div style={{ fontSize: '1.20rem' }}>
-              <Notification width={"30px"} color={"#122C34"} count={notification} />
-              {notification && (
-                <div>
-                  <p style={{ fontSize: '12px', color: '#122C34' }}>{notification.length}</p>
-                  {/* <div>
-                    {!notification.length && "No Message"}
-                    {notification.map((notification, index) => (
-                      <div key={index}>
-                        <p style={{ fontSize: '12px', color: '#122C34' }}>{notification.message.text}</p>
-                      </div>
-                    ))}
-                  </div> */}
-                </div>
-              )}
+              <Notification width={"30px"} color={"#122C34"} count={notification.length} />
+              <div>
+                {!notification.length && "No New Messages"}
+              </div>
             </div>
-
+            {/* Today Update  */}
           </div>
           <div className="contacts">
             {contacts.map((contact, index) => {
@@ -182,20 +173,5 @@ background-color: #fff;
       }
     }
   }
-}
-`;
-
-const Button = styled.button`
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 0.5rem;
-border-radius: 0.5rem;
-background-color: #8c6f6f;
-border: none;
-cursor: pointer;
-svg {
-  font-size: .75rem;
-  color: #fff;
 }
 `;

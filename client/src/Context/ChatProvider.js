@@ -9,7 +9,7 @@ const ChatProvider = ({ children }) => {
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY));
         setUser(userInfo);
-        console.log("userInfo context", userInfo);
+        // console.log("userInfo context", userInfo);
     }, []);
 
     return (
