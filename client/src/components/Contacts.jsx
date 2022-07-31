@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { singleUserRoute, updateNotificationRoute } from './../utils/APIRoutes';
 
 const style = {
   position: 'absolute',
@@ -18,8 +19,7 @@ const style = {
   p: 4,
 };
 
-export default function Contacts({ contacts, changeChat, notification }) {
-  // console.log("contacts", contacts)
+export default function Contacts({ contacts, changeChat, notification, setNotification }) {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -30,6 +30,7 @@ export default function Contacts({ contacts, changeChat, notification }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     const data = await JSON.parse(
@@ -39,10 +40,47 @@ export default function Contacts({ contacts, changeChat, notification }) {
     setCurrentUserImage(data.employeeId);
   }, []);
   const changeCurrentChat = (index, contact) => {
-    // console.log("contact", contact)
     setCurrentSelected(index);
     changeChat(contact);
   };
+
+
+  const getUserData = async (userId, notificationId) => {
+    // alert(notificationId)
+    const url = `${singleUserRoute}/${userId}`
+    // console.log("urlLLL===", url);
+    updateNotification(notificationId);
+    if (userId) {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          // console.log("fetch data", data);
+          changeChat(data);
+        }).catch(err => {
+          console.log("err", err);
+        });
+    }
+
+  }
+
+  const updateNotification = async (notificationId) => {
+    // alert(notificationId);
+    const updateNotification = `${updateNotificationRoute}/${notificationId}`
+    // console.log("updateNotification", updateNotification);
+    fetch(updateNotification, {
+      method: "PUT",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        isSeen: true,
+        seenAt: new Date()
+      })
+    })
+      .then(res => {
+        console.log("res", res);
+      })
+  }
 
   return (
     <>
@@ -70,13 +108,20 @@ export default function Contacts({ contacts, changeChat, notification }) {
                       {notification.length && notification.map((item, index) => {
                         console.log("item", item);
                         return (
-                          <Typography variant="body2" component="p"
+                          <Typography variant="body2" component="p" key={index}
+                            style={{
+                              cursor: 'pointer',
+                            }}
                             onClick={() => {
-                              changeChat(index, item.contact);
+                              getUserData(item.sender, item._id);
+                              setNotification([]);
                               handleClose();
                             }}
                           >
-                            New Message From: {item.users[0]}
+                            <div style={{ padding: '5px' }}>
+                              <th style={{ padding: '5px' }}>Sender ID:</th>
+                              <td>{item.sender}</td>
+                            </div>
                           </Typography>
                         );
                       }
@@ -127,7 +172,8 @@ export default function Contacts({ contacts, changeChat, notification }) {
             </div>
           </div>
         </Container>
-      )}
+      )
+      }
     </>
   );
 }

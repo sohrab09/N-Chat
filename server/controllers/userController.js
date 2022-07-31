@@ -56,6 +56,23 @@ module.exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+
+module.exports.getSingleUser = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id }).select([
+      "email",
+      "employeeName",
+      "avatarImage",
+      "_id",
+      "employeeId",
+    ]);
+    return res.json(user);
+  } catch (ex) {
+    next(ex);
+    console.log(ex);
+  }
+};
+
 module.exports.setAvatar = async (req, res, next) => {
   try {
     const userId = req.params.id;
@@ -65,7 +82,7 @@ module.exports.setAvatar = async (req, res, next) => {
       {
         isAvatarImageSet: true,
         avatarImage,
-        
+
       },
       { new: true }
     );

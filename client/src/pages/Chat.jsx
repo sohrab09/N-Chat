@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { allUsersRoute,receiveNotificationRoute, host } from "../utils/APIRoutes";
+import { allUsersRoute, receiveNotificationRoute, host } from "../utils/APIRoutes";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
@@ -15,7 +15,7 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [notification, setNotification] = useState(false);
 
-  
+
   const [currentUser, setCurrentUser] = useState(undefined);
   // console.log("currentChat", currentUser);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,13 +54,14 @@ export default function Chat() {
     }
   }, [currentUser]);
   const handleChatChange = (chat) => {
+    // console.log("chat", chat);
     setCurrentChat(chat);
   };
   return (
     <>
       <Container>
         <div className="container">
-          <Contacts contacts={contacts} changeChat={handleChatChange} notification={notification}/>
+          <Contacts contacts={contacts} changeChat={handleChatChange} notification={notification} setNotification={setNotification}/>
           {currentChat === undefined ? (
             <Welcome />
           ) : (
